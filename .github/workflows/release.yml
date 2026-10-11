@@ -1,8 +1,8 @@
 name: Release
 
-# Releases are built here rather than on a laptop so that each `main.js` carries
-# a provenance attestation: proof that the bundle attached to a release was built
-# from the source in this repository, by this workflow. `main.js` is not in the
+# Releases are built here rather than on a laptop so that `main.js` and
+# `styles.css` carry a provenance attestation: proof that what is attached to a
+# release came from the source in this repository, by this workflow. `main.js` is not in the
 # repository — it is generated — so without this there is no way to check that
 # what a reader downloads matches what they can read.
 
@@ -55,7 +55,9 @@ jobs:
 
       - uses: actions/attest-build-provenance@v4
         with:
-          subject-path: main.js
+          subject-path: |
+            main.js
+            styles.css
 
       # An annotated tag carries the release notes in its own message, so the
       # prose that describes a release lives with the release rather than as a

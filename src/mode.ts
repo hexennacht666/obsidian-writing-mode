@@ -180,7 +180,16 @@ export class WritingMode {
     body.classList.toggle("wm-typewriter", settings.typewriter);
     view.containerEl.classList.add("wm-view");
     this.applyFont(view.containerEl);
-    view.containerEl.closest(".workspace-leaf")?.classList.add("wm-leaf");
+    const leafEl = view.containerEl.closest(".workspace-leaf");
+    leafEl?.classList.add("wm-leaf");
+    // The tab groups and splits that hold the page stay; the rest of the main
+    // area is hidden (styles.css).
+    const holders: Element[] = [];
+    for (let el = leafEl?.parentElement; el && !el.classList.contains("mod-root"); el = el.parentElement) {
+      if (el.matches(".workspace-tabs, .workspace-split")) holders.push(el);
+    }
+    for (const el of holders) el.classList.add("wm-holds");
+    cleanup.push(() => holders.forEach((el) => el.classList.remove("wm-holds")));
 
     const scope = new Scope(app.scope);
     scope.register([], "Escape", (event) => {
