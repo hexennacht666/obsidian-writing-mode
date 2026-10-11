@@ -61,11 +61,13 @@ All in **Settings → Writing Mode**.
 
 ## Compatibility
 
-Every release of Writing Mode is tested against the ten most-installed Obsidian themes and the ten most-installed plugins, in light and dark mode, on desktop and mobile.
+Every release of Writing Mode is tested against the ten most-installed Obsidian themes and plugins, popular writing plugins, in light and dark mode, and on desktop and mobile.
 
-**Themes:** Minimal, Things, AnuPpuccin, Blue Topaz, Obsidian Nord, Atom, Obsidianite, Wasp, Typewriter, ITS Theme.
+**Themes:** Minimal, Things, AnuPpuccin, Blue Topaz, Obsidian Nord, Atom, Obsidianite, Wasp, Typewriter, ITS Theme, Border.
 
 **Plugins:** Excalidraw, Templater, Dataview, Tasks, Git, Advanced Tables, Calendar, Style Settings, Kanban, Copilot.
+
+**Also tested with:** Notebook Navigator, Longform, Better Word Count, Novel Word Count, Highlightr, Outliner, Iconize, Commander, Hover Editor, Minimal Theme Settings, Typewriter Mode, Typewriter Scroll, Focus Mode, Hider.
 
 If you already use a typewriter-scroll plugin, turn off typewriter scroll in Writing Mode's settings so the two don't compete.
 
