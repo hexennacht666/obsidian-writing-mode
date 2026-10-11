@@ -15,14 +15,19 @@ body.wm-on .mod-root .workspace-tabs:not(.wm-holds),
 body.wm-on .mod-root .workspace-split:not(.wm-holds),
 body.wm-on .wm-view .view-header,
 body.wm-on .wm-view .inline-title,
-body.wm-on .wm-view .metadata-container,
-body.wm-on .wm-view .cm-line.wm-frontmatter {
+body.wm-on .wm-view .markdown-source-view.mod-cm6 .metadata-container,
+body.wm-on .wm-view .markdown-source-view.mod-cm6 .cm-line.wm-frontmatter {
   display: none;
 }
 
-/* Minimal can force its ribbon back with !important, through this variable. */
+/* Obsidian shows Properties through --metadata-display-editing, and Minimal
+   can force its ribbon back with !important, through --hider-ribbon-display. */
 body.wm-on {
   --hider-ribbon-display: none;
+}
+
+body.wm-on .wm-view {
+  --metadata-display-editing: none;
 }
 
 /* --- The page: a sheet on an opaque backdrop, Scrivener's shape ------------ */
@@ -89,12 +94,14 @@ body.wm-on.wm-paper .wm-view .markdown-source-view {
   /* Themes color the marks with their own accents (green italics, pink,
      orange) and band the cursor line; on one of the papers both are ink.
      Several do it with !important, but through variables, which are set here:
-     Nord's cursor line and bold, Blue Topaz's highlights and bold face. */
+     Nord's and Blue Topaz's cursor line, Nord's bold, Blue Topaz's highlights
+     and bold face. */
   --italic-color: var(--wm-ink);
   --bold-color: var(--wm-ink);
   --code-comment: var(--wm-ink-soft);
   --active-line-bg: transparent;
   --cursor-line-background: transparent;
+  --activeline-background: transparent;
   --text-highlight-bg: var(--wm-highlight);
   --bg-color-highlight-1: var(--wm-highlight);
   --bg-color-highlight-2: var(--wm-highlight);
@@ -294,6 +301,13 @@ body.is-mobile.wm-on .wm-view .markdown-source-view.mod-cm6 .cm-scroller {
   padding-top: 0;
 }
 
+/* Obsidian's own spacing above a note on the phone, and its fade under the
+   floating header. */
+body.is-mobile.wm-on .wm-view {
+  --view-top-spacing-markdown: 0;
+  --view-top-fade-mask: none;
+}
+
 /* A tablet pads the main area for its tab bar, which is hidden here. */
 body.is-mobile.wm-on .workspace-split.mod-root {
   padding-top: 0;
@@ -479,8 +493,10 @@ body.wm-on .mobile-toolbar-options-container {
   justify-content: flex-end;
 }
 
-/* Drawn the way the book is: the paper's ink on a disc of the paper. */
+/* Drawn the way the book is: the paper's ink on a disc of the paper.
+   --raised switches off Obsidian's frosted glass. */
 body.wm-on .mobile-toolbar-floating-options {
+  --raised: none;
   background: var(--wm-paper);
   border: none;
   box-shadow: none;
