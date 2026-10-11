@@ -17,7 +17,12 @@ body.wm-on .wm-view .view-header,
 body.wm-on .wm-view .inline-title,
 body.wm-on .wm-view .metadata-container,
 body.wm-on .wm-view .cm-line.wm-frontmatter {
-  display: none !important;
+  display: none;
+}
+
+/* Minimal can force its ribbon back with !important, through this variable. */
+body.wm-on {
+  --hider-ribbon-display: none;
 }
 
 /* --- The page: a sheet on an opaque backdrop, Scrivener's shape ------------ */
@@ -83,22 +88,34 @@ body.wm-on.wm-paper .wm-view .markdown-source-view {
   color: var(--wm-ink);
   /* Themes color the marks with their own accents (green italics, pink,
      orange) and band the cursor line; on one of the papers both are ink.
-     Several do it with !important or long selectors, hence the weight below. */
+     Several do it with !important, but through variables, which are set here:
+     Nord's cursor line and bold, Blue Topaz's highlights and bold face. */
   --italic-color: var(--wm-ink);
   --bold-color: var(--wm-ink);
   --code-comment: var(--wm-ink-soft);
   --active-line-bg: transparent;
+  --cursor-line-background: transparent;
+  --text-highlight-bg: var(--wm-highlight);
+  --bg-color-highlight-1: var(--wm-highlight);
+  --bg-color-highlight-2: var(--wm-highlight);
+  --bg-color-highlight-3: var(--wm-highlight);
+  --highlight-background-color--active: var(--wm-highlight);
+  --highlight-background-color-underline: var(--wm-highlight);
+  --font-family-strong: inherit;
+  /* Obsidianite forces italics into fonts it doesn't ship, then this one. */
+  --default-font: var(--font-text);
 }
 
-/* Some themes paint with -webkit-text-fill-color (Obsidianite's white
-   highlights), which wins over color, so both are set. Italics and bold keep
-   the page's face; Obsidianite sets italics in a sans. */
+/* -webkit-text-fill-color paints over color, so setting it here beats the
+   themes that force a mark's color with !important (Obsidianite's italics,
+   Blue Topaz's bold) and the ones that paint with it (Obsidianite's bold and
+   white highlights). Italics and bold keep the page's face. */
 body.wm-on.wm-paper .wm-view .markdown-source-view .cm-line .cm-em,
 body.wm-on.wm-paper .wm-view .markdown-source-view .cm-line .cm-strong,
 body.wm-on.wm-paper .wm-view .markdown-source-view .cm-line .cm-highlight {
-  color: var(--wm-ink) !important;
-  -webkit-text-fill-color: var(--wm-ink) !important;
-  font-family: inherit !important;
+  color: var(--wm-ink);
+  -webkit-text-fill-color: var(--wm-ink);
+  font-family: inherit;
 }
 
 /* A theme pairs its highlight color with its own text color, so on a paper,
@@ -112,24 +129,24 @@ body.theme-dark {
 }
 
 body.wm-on.wm-paper .wm-view .markdown-source-view .cm-line .cm-highlight {
-  background-color: var(--wm-highlight) !important;
-  background-image: none !important;
+  background-color: var(--wm-highlight);
+  background-image: none;
 }
 
 body.wm-on.wm-paper .wm-view .markdown-source-view .cm-line .cm-comment {
-  color: var(--wm-ink-soft) !important;
-  -webkit-text-fill-color: var(--wm-ink-soft) !important;
+  color: var(--wm-ink-soft);
+  -webkit-text-fill-color: var(--wm-ink-soft);
 }
 
 /* Headings are the soft ink on every paper, also where a theme colors them
    by its own variables (Obsidianite's --text-title-h1). */
 body.wm-on.wm-paper .wm-view .markdown-source-view .cm-line .cm-header {
-  color: var(--wm-ink-soft) !important;
-  -webkit-text-fill-color: var(--wm-ink-soft) !important;
+  color: var(--wm-ink-soft);
+  -webkit-text-fill-color: var(--wm-ink-soft);
 }
 
 body.wm-on.wm-paper .wm-view .markdown-source-view .cm-line.cm-active {
-  background-color: transparent !important;
+  background-color: transparent;
 }
 
 /* The face: Scrivener's Palatino by default, the theme's font when the setting is empty.
@@ -274,20 +291,20 @@ body.wm-on .wm-view .markdown-source-view.mod-cm6 .cm-sizer {
    starting near the top. */
 body.is-mobile.wm-on .wm-view .markdown-source-view.mod-cm6 .cm-scroller {
   background: var(--wm-paper);
-  padding-top: 0 !important;
+  padding-top: 0;
 }
 
 /* A tablet pads the main area for its tab bar, which is hidden here. */
 body.is-mobile.wm-on .workspace-split.mod-root {
-  padding-top: 0 !important;
+  padding-top: 0;
 }
 
 /* The phone's floating header and nav bar are gone, so the fades they put
    over the top of the note and the foot of the screen go with them. */
 body.is-mobile.wm-on .wm-view .view-content,
 body.is-mobile.wm-on .workspace-split.mod-root {
-  mask-image: none !important;
-  -webkit-mask-image: none !important;
+  mask-image: none;
+  -webkit-mask-image: none;
 }
 
 body.is-mobile.wm-on .wm-view .markdown-source-view.mod-cm6 .cm-sizer {
@@ -309,8 +326,10 @@ body.is-mobile.wm-on .wm-view .markdown-source-view.mod-cm6.is-readable-line-wid
 
 /* The text starts a little way down the sheet. */
 body.wm-on .wm-view .cm-content {
-  padding-top: 72px !important;
-  padding-bottom: 40vh !important;
+  padding-top: 72px;
+  padding-bottom: 40vh;
+  /* Blue Topaz's own, which it can force with !important. */
+  --bottom-padding-value: 40vh;
 }
 
 body.wm-on .wm-view .cm-scroller {
@@ -323,7 +342,8 @@ body.wm-on .wm-view .cm-scroller::-webkit-scrollbar {
 
 /* Room below, so the last lines can be held where they were typed. */
 body.wm-on.wm-typewriter .wm-view .cm-content {
-  padding-bottom: 50vh !important;
+  padding-bottom: 50vh;
+  --bottom-padding-value: 50vh;
 }
 
 /* The text scrolls right up to the status bar; at the top of the note it
@@ -334,7 +354,7 @@ body.is-mobile.wm-on .wm-view .view-content {
 }
 
 body.is-mobile.wm-on .wm-view .cm-content {
-  padding-top: 48px !important;
+  padding-top: 48px;
 }
 
 /* The text size for this device, applied the way Obsidian applies its own. Since 1.14 the editor reads
@@ -461,11 +481,11 @@ body.wm-on .mobile-toolbar-options-container {
 
 /* Drawn the way the book is: the paper's ink on a disc of the paper. */
 body.wm-on .mobile-toolbar-floating-options {
-  background: var(--wm-paper) !important;
+  background: var(--wm-paper);
   border: none;
-  box-shadow: none !important;
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
+  box-shadow: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
 }
 
 body.wm-on .mobile-toolbar-floating-options .mobile-toolbar-option {
