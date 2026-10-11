@@ -56,8 +56,11 @@ export function sentenceAround(doc: Doc, pos: number): Span {
   const rel = pos - paragraph.from;
 
   const ends: number[] = [];
-  for (const match of text.matchAll(SENTENCE_END)) {
-    ends.push((match.index ?? 0) + match[0].length);
+  SENTENCE_END.lastIndex = 0;
+  let match = SENTENCE_END.exec(text);
+  while (match) {
+    ends.push(match.index + match[0].length);
+    match = SENTENCE_END.exec(text);
   }
   if (ends[ends.length - 1] !== text.length) ends.push(text.length);
 
