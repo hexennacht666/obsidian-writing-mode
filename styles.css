@@ -1,0 +1,496 @@
+/* Writing Mode: nothing on screen but the prose.
+   Everything is scoped to body.wm-on, which is present only while the mode is
+   on, and .wm-view, the one note it is on. */
+
+/* --- What disappears --------------------------------------------------- */
+
+body.wm-on .workspace-ribbon,
+body.wm-on .workspace-split.mod-left-split,
+body.wm-on .workspace-split.mod-right-split,
+body.wm-on .status-bar,
+body.wm-on .mobile-navbar,
+body.wm-on .mod-root .workspace-tab-header-container,
+body.wm-on .mod-root .workspace-leaf-resize-handle,
+body.wm-on .mod-root .workspace-tabs:not(:has(.wm-leaf)),
+body.wm-on .mod-root .workspace-split:not(:has(.wm-leaf)),
+body.wm-on .wm-view .view-header,
+body.wm-on .wm-view .inline-title,
+body.wm-on .wm-view .metadata-container,
+body.wm-on .wm-view .cm-line.wm-frontmatter {
+  display: none !important;
+}
+
+/* --- The page: a sheet on an opaque backdrop, Scrivener's shape ------------ */
+
+body {
+  --wm-paper: var(--background-primary);
+  --wm-backdrop: color-mix(in srgb, var(--background-primary) 90%, black);
+  --wm-ink: var(--text-normal);
+  --wm-ink-soft: var(--text-muted);
+  --wm-paper-width: 850px;
+}
+
+body.theme-dark {
+  --wm-backdrop: color-mix(in srgb, var(--background-primary) 72%, black);
+}
+
+/* The papers. Night blue is Scrivener 3's composition default; the others are
+   its companions: a cream and a cool white
+   for daylight, a grey night for anyone who finds the blue too warm. In every
+   one the text is ink or soft grey, never stark white or black, and headings
+   and marks sit a step softer. */
+body.wm-paper-cream {
+  --wm-paper: #f5f0e4;
+  --wm-backdrop: #cbc4b5;
+  --wm-ink: #33302a;
+  --wm-ink-soft: #6c665a;
+}
+
+body.wm-paper-white {
+  --wm-paper: #fbfbfc;
+  --wm-backdrop: #c9ced7;
+  --wm-ink: #292c32;
+  --wm-ink-soft: #62676f;
+}
+
+body.wm-paper-blue {
+  --wm-paper: #262d37;
+  --wm-backdrop: #18222c;
+  --wm-ink: #c1c6ce;
+  --wm-ink-soft: #999ea7;
+}
+
+body.wm-paper-grey {
+  --wm-paper: #2a2a2b;
+  --wm-backdrop: #181819;
+  --wm-ink: #c6c6c4;
+  --wm-ink-soft: #97979a;
+}
+
+body.wm-on.wm-paper .wm-view .markdown-source-view {
+  --text-normal: var(--wm-ink);
+  --text-muted: var(--wm-ink-soft);
+  --text-faint: var(--wm-ink-soft);
+  --text-accent: var(--wm-ink);
+  --caret-color: var(--wm-ink);
+  --h1-color: var(--wm-ink-soft);
+  --h2-color: var(--wm-ink-soft);
+  --h3-color: var(--wm-ink-soft);
+  --h4-color: var(--wm-ink-soft);
+  --h5-color: var(--wm-ink-soft);
+  --h6-color: var(--wm-ink-soft);
+  --text-selection: rgba(128, 132, 140, 0.3);
+  color: var(--wm-ink);
+  /* Themes color the marks with their own accents (green italics, pink,
+     orange) and band the cursor line; on one of the papers both are ink.
+     Several do it with !important or long selectors, hence the weight below. */
+  --italic-color: var(--wm-ink);
+  --bold-color: var(--wm-ink);
+  --code-comment: var(--wm-ink-soft);
+  --active-line-bg: transparent;
+}
+
+/* Some themes paint with -webkit-text-fill-color (Obsidianite's white
+   highlights), which wins over color, so both are set. Italics and bold keep
+   the page's face; Obsidianite sets italics in a sans. */
+body.wm-on.wm-paper .wm-view .markdown-source-view .cm-line .cm-em,
+body.wm-on.wm-paper .wm-view .markdown-source-view .cm-line .cm-strong,
+body.wm-on.wm-paper .wm-view .markdown-source-view .cm-line .cm-highlight {
+  color: var(--wm-ink) !important;
+  -webkit-text-fill-color: var(--wm-ink) !important;
+  font-family: inherit !important;
+}
+
+/* A theme pairs its highlight color with its own text color, so on a paper,
+   where the text is ink, the highlight is Obsidian's own: its yellow at 30%. */
+body.theme-light {
+  --wm-highlight: color-mix(in oklch, #e0ac00 30%, transparent);
+}
+
+body.theme-dark {
+  --wm-highlight: color-mix(in oklch, #e0de71 30%, transparent);
+}
+
+body.wm-on.wm-paper .wm-view .markdown-source-view .cm-line .cm-highlight {
+  background-color: var(--wm-highlight) !important;
+  background-image: none !important;
+}
+
+body.wm-on.wm-paper .wm-view .markdown-source-view .cm-line .cm-comment {
+  color: var(--wm-ink-soft) !important;
+  -webkit-text-fill-color: var(--wm-ink-soft) !important;
+}
+
+/* Headings are the soft ink on every paper, also where a theme colors them
+   by its own variables (Obsidianite's --text-title-h1). */
+body.wm-on.wm-paper .wm-view .markdown-source-view .cm-line .cm-header {
+  color: var(--wm-ink-soft) !important;
+  -webkit-text-fill-color: var(--wm-ink-soft) !important;
+}
+
+body.wm-on.wm-paper .wm-view .markdown-source-view .cm-line.cm-active {
+  background-color: transparent !important;
+}
+
+/* The face: Scrivener's Palatino by default, the theme's font when the setting is empty.
+   Themes reach the editor and the headings through their own variables too
+   (Minimal's --font-editor, the --h1-font family), so those follow it. */
+body.wm-on .wm-view.wm-font .markdown-source-view {
+  --font-text: var(--wm-font);
+  --font-editor: var(--wm-font);
+  --h1-font: var(--wm-font);
+  --h2-font: var(--wm-font);
+  --h3-font: var(--wm-font);
+  --h4-font: var(--wm-font);
+  --h5-font: var(--wm-font);
+  --h6-font: var(--wm-font);
+}
+
+/* Anything that opens over the page while a paper is chosen is on that paper:
+   a note card, a menu, the palette, a tooltip. They are all children of the
+   body outside the app container, and all built from the theme's own tokens,
+   so remapping the tokens there is enough; no plugin has to know about this
+   one. The theme's own paper needs nothing. */
+body.wm-on.wm-paper > :not(.app-container) {
+  --background-primary: var(--wm-paper);
+  --background-secondary: var(--wm-paper);
+  --background-primary-alt: var(--wm-paper);
+  --background-modifier-border: color-mix(in srgb, var(--wm-ink) 16%, var(--wm-paper));
+  --background-modifier-border-hover: color-mix(in srgb, var(--wm-ink) 28%, var(--wm-paper));
+  --background-modifier-hover: color-mix(in srgb, var(--wm-ink) 8%, var(--wm-paper));
+  /* Obsidian resolves these from --background-primary at the body, before
+     the remap above can reach them, so each is set to the paper directly. */
+  --modal-background: var(--wm-paper);
+  --prompt-background: var(--wm-paper);
+  --menu-background: var(--wm-paper);
+  --suggestion-background: var(--wm-paper);
+  --raised-background: var(--wm-paper);
+  --background-modifier-form-field: var(--wm-paper);
+  --interactive-normal: color-mix(in srgb, var(--wm-ink) 8%, var(--wm-paper));
+  --icon-color: var(--wm-ink-soft);
+  --icon-color-hover: var(--wm-ink);
+  --text-normal: var(--wm-ink);
+  --text-muted: var(--wm-ink-soft);
+  --text-faint: var(--wm-ink-soft);
+  --text-accent: var(--wm-ink);
+  --text-selection: rgba(128, 132, 140, 0.3);
+  color: var(--wm-ink);
+  font-family: var(--font-text);
+}
+
+/* Some themes paint their popovers directly, often as frosted glass over the
+   page (Border, Blue Topaz); over a paper they are the paper, solid. */
+body.wm-on.wm-paper > :not(.app-container) :is(.prompt, .modal, .menu, .popover, .suggestion-container) {
+  background-color: var(--wm-paper);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+/* A theme that marks the chosen row with its accent color would put ink on
+   that color; the row is the paper's hover tint instead. */
+body.wm-on.wm-paper > :not(.app-container) .suggestion-item.is-selected {
+  background-color: var(--background-modifier-hover);
+}
+
+/* The two screens' own faces, further down, outweigh this by coming later at the same weight. */
+body.wm-on.wm-paper.wm-font > :not(.app-container) {
+  font-family: var(--wm-font);
+}
+
+body.wm-on .wm-view {
+  position: relative;
+}
+
+/* Two screens from the first decades of word processors, for fun. Each brings
+   its own monospace face, over the Typeface setting, because the face is the
+   screen. The green one has no sheet: the whole screen is the phosphor. */
+body.wm-paper-green {
+  --wm-paper: #0a0e0a;
+  --wm-backdrop: #0a0e0a;
+  --wm-ink: #4dff7c;
+  --wm-ink-soft: #2fb457;
+}
+
+body.wm-on.wm-paper-green .wm-view .markdown-source-view,
+body.wm-on.wm-paper.wm-paper-green > :not(.app-container) {
+  --font-text: "IBM Plex Mono", Menlo, Monaco, "Courier New", monospace;
+  --font-editor: var(--font-text);
+  --h1-font: var(--font-text);
+  --h2-font: var(--font-text);
+  --h3-font: var(--font-text);
+  --h4-font: var(--font-text);
+  --h5-font: var(--font-text);
+  --h6-font: var(--font-text);
+  font-family: var(--font-text);
+  text-shadow: 0 0 6px color-mix(in srgb, currentColor 35%, transparent);
+}
+
+body.wm-on.wm-paper-green .wm-view .markdown-source-view.mod-cm6 .cm-sizer {
+  box-shadow: none;
+}
+
+body.wm-paper-mac {
+  --wm-paper: #ffffff;
+  --wm-backdrop: #8e8e8e;
+  --wm-ink: #000000;
+  --wm-ink-soft: #3a3a3a;
+}
+
+body.wm-on.wm-paper-mac .wm-view .markdown-source-view,
+body.wm-on.wm-paper.wm-paper-mac > :not(.app-container) {
+  --font-text: Monaco, Menlo, "Courier New", monospace;
+  --font-editor: var(--font-text);
+  --h1-font: var(--font-text);
+  --h2-font: var(--font-text);
+  --h3-font: var(--font-text);
+  --h4-font: var(--font-text);
+  --h5-font: var(--font-text);
+  --h6-font: var(--font-text);
+  font-family: var(--font-text);
+}
+
+body.wm-on.wm-paper-mac .wm-view .markdown-source-view.mod-cm6 .cm-sizer {
+  box-shadow: 0 0 0 1px #000000;
+}
+
+body.wm-on .wm-view .markdown-source-view.mod-cm6 .cm-scroller {
+  background: var(--wm-backdrop);
+}
+
+/* The sheet: paper width whatever the vault's line length, reaching the full height. */
+body.wm-on .wm-view .markdown-source-view.mod-cm6 .cm-sizer {
+  max-width: var(--wm-paper-width);
+  min-height: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 56px;
+  padding-right: 56px;
+  background: var(--wm-paper);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.12);
+}
+
+/* On a phone the paper is the whole screen: no sheet on a backdrop, the
+   editor's own side margins (the view already has them), and the text
+   starting near the top. */
+body.is-mobile.wm-on .wm-view .markdown-source-view.mod-cm6 .cm-scroller {
+  background: var(--wm-paper);
+  padding-top: 0 !important;
+}
+
+/* A tablet pads the main area for its tab bar, which is hidden here. */
+body.is-mobile.wm-on .workspace-split.mod-root {
+  padding-top: 0 !important;
+}
+
+/* The phone's floating header and nav bar are gone, so the fades they put
+   over the top of the note and the foot of the screen go with them. */
+body.is-mobile.wm-on .wm-view .view-content,
+body.is-mobile.wm-on .workspace-split.mod-root {
+  mask-image: none !important;
+  -webkit-mask-image: none !important;
+}
+
+body.is-mobile.wm-on .wm-view .markdown-source-view.mod-cm6 .cm-sizer {
+  max-width: none;
+  margin-left: 0;
+  margin-right: 0;
+  padding-left: 0;
+  padding-right: 0;
+  box-shadow: none;
+}
+
+/* A tablet is wider than a line: with Readable line length on, the text
+   keeps the editor's width and sits centered, as it does in the editor. */
+body.is-mobile.wm-on .wm-view .markdown-source-view.mod-cm6.is-readable-line-width .cm-sizer {
+  max-width: var(--file-line-width);
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* The text starts a little way down the sheet. */
+body.wm-on .wm-view .cm-content {
+  padding-top: 72px !important;
+  padding-bottom: 40vh !important;
+}
+
+body.wm-on .wm-view .cm-scroller {
+  scrollbar-width: none;
+}
+
+body.wm-on .wm-view .cm-scroller::-webkit-scrollbar {
+  display: none;
+}
+
+/* Room below, so the last lines can be held where they were typed. */
+body.wm-on.wm-typewriter .wm-view .cm-content {
+  padding-bottom: 50vh !important;
+}
+
+/* The text scrolls right up to the status bar; at the top of the note it
+   starts just under the book. */
+body.is-mobile.wm-on .wm-view .view-content {
+  padding-top: env(safe-area-inset-top, 0px);
+  background-color: var(--wm-paper);
+}
+
+body.is-mobile.wm-on .wm-view .cm-content {
+  padding-top: 48px !important;
+}
+
+/* The text size for this device, applied the way Obsidian applies its own. Since 1.14 the editor reads
+   --font-preferred-size, which Obsidian resolves at the body (on the phone,
+   scaled by the system text size), so it is restated here; so is Minimal's
+   own editor size, resolved the same way. */
+body.wm-on .wm-view.wm-sized .markdown-source-view {
+  --font-text-size: var(--wm-font-size);
+  --font-preferred-size: var(--wm-font-size);
+  --font-adaptive-normal: var(--font-preferred-size);
+  /* Headings keep Obsidian's own steps above the page's text; a theme's
+     fixed sizes (Things sizes them from the root) would sit below it. */
+  --h1-size: 1.618em;
+  --h2-size: 1.462em;
+  --h3-size: 1.318em;
+  --h4-size: 1.188em;
+  --h5-size: 1.076em;
+  --h6-size: 1em;
+}
+
+body.is-mobile.wm-on .wm-view.wm-sized .markdown-source-view {
+  --font-preferred-size: calc(var(--wm-font-size) * var(--preferred-text-scale, 1));
+}
+
+/* --- Dimming --------------------------------------------------------------- */
+
+body.wm-on .wm-view .wm-dim {
+  opacity: 0.32;
+}
+
+/* --- The veil: enter and leave are one fade, not a flip --------------------- */
+
+.wm-veil {
+  position: fixed;
+  inset: 0;
+  background: var(--wm-backdrop);
+  opacity: 0;
+  transition: opacity 220ms ease;
+  pointer-events: none;
+  z-index: 1000;
+}
+
+.wm-veil.wm-veil-up {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wm-veil {
+    transition: none;
+  }
+}
+
+/* --- The few things that are not prose ------------------------------------- */
+
+/* One line, the first time, then never again. */
+.wm-hint {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: max-content;
+  max-width: calc(100% - 32px);
+  bottom: 22px;
+  padding: 4px 12px;
+  border-radius: 999px;
+  background-color: var(--wm-paper);
+  text-align: center;
+  font-size: var(--font-ui-small);
+  color: var(--text-faint);
+  pointer-events: none;
+  opacity: 0;
+  animation: wm-hint 7s ease forwards;
+  z-index: 5;
+}
+
+/* On the phone the hint sits in the clear space at the top, level with the
+   book, where no text is when the mode opens. */
+body.is-mobile .wm-hint {
+  bottom: auto;
+  top: calc(env(safe-area-inset-top, 0px) + 14px);
+}
+
+@keyframes wm-hint {
+  0% { opacity: 0; }
+  10% { opacity: 1; }
+  80% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+/* Off by default; a static count for anyone who asks. */
+.wm-wordcount {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 10px;
+  text-align: center;
+  font-size: var(--font-ui-smaller);
+  color: var(--text-faint);
+  pointer-events: none;
+  z-index: 5;
+}
+
+/* --- Above the phone's keyboard ------------------------------------------- */
+
+/* Obsidian keeps a strip above the keyboard for its toolbar. In writing mode
+   the formatting buttons go and the strip is the paper, keeping only the
+   iPhone's button that puts the keyboard away, so the page can be read
+   without it. */
+body.wm-on .mobile-toolbar-spacer {
+  background-color: var(--wm-paper);
+}
+
+body.wm-on .mobile-toolbar {
+  background-color: var(--wm-paper);
+  box-shadow: none;
+}
+
+body.wm-on .mobile-toolbar-options-list-container {
+  display: none;
+}
+
+body.wm-on .mobile-toolbar-options-container {
+  justify-content: flex-end;
+}
+
+/* Drawn the way the book is: the paper's ink on a disc of the paper. */
+body.wm-on .mobile-toolbar-floating-options {
+  background: var(--wm-paper) !important;
+  border: none;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+body.wm-on .mobile-toolbar-floating-options .mobile-toolbar-option {
+  color: var(--wm-ink-soft);
+  --icon-size: 22px;
+}
+
+/* The phone has no Escape. */
+.wm-close {
+  display: none;
+}
+
+body.is-mobile .wm-close {
+  display: grid;
+  place-items: center;
+  position: absolute;
+  top: calc(env(safe-area-inset-top, 0px) + 2px);
+  right: 8px;
+  width: 44px;
+  height: 44px;
+  color: var(--wm-ink-soft);
+  --icon-size: 22px;
+  /* A disc of the paper behind the book, so text scrolling past never runs
+     into it. */
+  background-color: var(--wm-paper);
+  border-radius: 50%;
+  z-index: 6;
+}

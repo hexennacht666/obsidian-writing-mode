@@ -1,0 +1,35 @@
+name: Check
+
+# Lint, test and build on every push and pull request; the release workflow
+# runs only once a tag exists, too late to find a broken build.
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: "22"
+          cache: npm
+
+      - run: npm ci
+      - run: npm run lint
+      - run: npm test
+      - run: npm run build
+
+      - name: Refuse a bundle that executes strings
+        run: |
+          for pattern in 'createElement("script")' 'new Function(' 'eval('; do
+            if grep -qF "$pattern" main.js; then
+              echo "main.js contains $pattern." >&2
+              exit 1
+            fi
+          done

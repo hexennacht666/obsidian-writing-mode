@@ -1,0 +1,9 @@
+{
+  "id": "writing-mode",
+  "name": "Writing Mode",
+  "version": "1.0.0",
+  "minAppVersion": "1.13.0",
+  "description": "A quiet, distraction-free writing mode, with optional typewriter scroll and dimming. Choose from a range of papers, or use your own theme. Designed to work on desktop and mobile.",
+  "author": "Beth Dean",
+  "isDesktopOnly": false
+}

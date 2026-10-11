@@ -1,0 +1,26 @@
+{
+  "name": "obsidian-writing-mode",
+  "version": "1.0.0",
+  "description": "A quiet, distraction-free writing mode, with optional typewriter scroll and dimming. Choose from a range of papers, or use your own theme. Designed to work on desktop and mobile.",
+  "main": "main.js",
+  "scripts": {
+    "dev": "node esbuild.config.mjs",
+    "build": "tsc -noEmit -skipLibCheck && node esbuild.config.mjs production",
+    "test": "esbuild tests/*.test.ts --bundle --platform=node --format=cjs --outdir=.tests --log-level=warning && node --test \".tests/**/*.test.js\"",
+    "lint": "eslint src",
+    "install:vault": "npm run build && mkdir -p \"${SP_VAULT:?Set SP_VAULT to your vault folder}/.obsidian/plugins/writing-mode\" && cp main.js manifest.json styles.css \"$SP_VAULT/.obsidian/plugins/writing-mode/\""
+  },
+  "author": "Beth Dean",
+  "license": "MIT",
+  "devDependencies": {
+    "@codemirror/state": "6.5.0",
+    "@codemirror/view": "^6.38.6",
+    "@types/node": "^22.10.2",
+    "@typescript-eslint/parser": "^8.66.0",
+    "esbuild": "^0.24.2",
+    "eslint": "^9.39.5",
+    "eslint-plugin-obsidianmd": "^0.4.1",
+    "obsidian": "1.13.1",
+    "typescript": "^5.7.2"
+  }
+}
