@@ -205,6 +205,10 @@ const marksPlugin = ViewPlugin.fromClass(Marks, { decorations: (value) => value.
  * A second scroll a frame later would make the page bounce.
  */
 
+/** Where a caret found out of view is held, as fractions of the editor's height. */
+const HELD_MIN = 0.25;
+const HELD_MAX = 0.6;
+
 /** The caret's height, from the top of the editor, to hold while typing. */
 const setHeldTop = StateEffect.define<number | null>();
 
@@ -247,7 +251,10 @@ class Typewriter implements PluginValue {
     // Typing is held by the extender. A placed caret sets the height to hold,
     // and so does the page laying out again under it without typing (the
     // mode's text size arriving after it opens, a pinch, a rotated phone).
-    const placed = update.selectionSet || update.geometryChanged;
+    // Settings applied while the mode is on clear the held height, so it is
+    // measured again.
+    const reset = update.transactions.some((tr) => tr.effects.some((effect) => effect.is(setWritingMode)));
+    const placed = update.selectionSet || update.geometryChanged || reset;
     if (update.docChanged) {
       this.justEdited = true;
       window.setTimeout(() => (this.justEdited = false), 0);
@@ -271,7 +278,14 @@ class Typewriter implements PluginValue {
       if (!view.dom.isConnected || !view.state.field(writingModeField)?.typewriter) return;
       const coords = view.coordsAtPos(view.state.selection.main.head);
       if (!coords) return;
-      const top = coords.top - view.scrollDOM.getBoundingClientRect().top;
+      const height = view.scrollDOM.clientHeight;
+      let top = coords.top - view.scrollDOM.getBoundingClientRect().top;
+      // The caret scrolled out of view when the page laid out again (a
+      // setting switched, a resize): typing brings it back into the page,
+      // not to the edge it went past.
+      if (top < 0 || coords.bottom - coords.top + top > height) {
+        top = Math.min(Math.max(top, height * HELD_MIN), height * HELD_MAX);
+      }
       const held = view.state.field(heldTopField);
       if (held !== null && Math.abs(held - top) < 1) return;
       view.dispatch({ effects: setHeldTop.of(top) });
