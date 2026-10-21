@@ -573,6 +573,54 @@ body.wm-on.wm-paper-mac .wm-view .wm-wordcount {
   border-top-left-radius: 0;
 }
 
+/* On the phone, while the keyboard is up, the count moves into the strip
+   above it, beside the keyboard button, and the corner keeps clear. */
+body.is-mobile.mod-toolbar-open.wm-on .wm-view .wm-wordcount {
+  display: none;
+}
+
+/* With the keyboard down, the corner box clears the iPhone's home bar. */
+body.is-mobile.wm-on .wm-view .wm-wordcount {
+  padding-bottom: calc(4px + env(safe-area-inset-bottom, 0px));
+}
+
+body.wm-on .wm-wordcount-strip {
+  display: inline-flex;
+  align-items: center;
+  box-sizing: border-box;
+  height: 26px;
+  margin-right: 6px;
+  padding: 0 9px;
+  border: 1px solid var(--wm-ink-soft);
+  border-radius: 6px;
+  color: var(--wm-ink-soft);
+  font-family: var(--font-text);
+  font-size: var(--font-ui-small);
+  line-height: 1;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+body.wm-on.wm-font .wm-wordcount-strip {
+  font-family: var(--wm-font);
+}
+
+body.wm-on.wm-paper-green .wm-wordcount-strip {
+  font-family: "IBM Plex Mono", Menlo, Monaco, "Courier New", monospace;
+  text-shadow: 0 0 6px color-mix(in srgb, currentColor 35%, transparent);
+  border-radius: 0;
+}
+
+body.wm-on.wm-paper-mac .wm-wordcount-strip {
+  font-family: Monaco, Menlo, "Courier New", monospace;
+  border-color: var(--wm-ink);
+  border-radius: 0;
+}
+
+body:not(.wm-on) .wm-wordcount-strip {
+  display: none;
+}
+
 /* --- Above the phone's keyboard ------------------------------------------- */
 
 /* Obsidian keeps a strip above the keyboard for its toolbar. In writing mode
