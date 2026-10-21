@@ -3,7 +3,7 @@
 // plugins that do nothing until the mode is switched on in that editor, so the
 // extension can sit in every editor and act in one.
 
-import { EditorSelection, EditorState, StateEffect, StateField, type Extension, type Range } from "@codemirror/state";
+import { EditorSelection, EditorState, StateEffect, StateField, type Extension, type Range, type Text } from "@codemirror/state";
 import {
   Decoration,
   EditorView,
@@ -13,7 +13,7 @@ import {
   type ViewUpdate,
 } from "@codemirror/view";
 import type { Dimming } from "./settings";
-import { frontmatterLines, ornamentLines, paragraphAround, sentenceAround, type Span } from "./text";
+import { frontmatterLines, ornamentLines, paragraphAround, sentenceAround, tailpieceLine, type Ornaments, type Span } from "./text";
 
 export interface WritingModeOptions {
   dimming: Dimming;
@@ -111,6 +111,18 @@ const firstLine = Decoration.line({ class: "wm-opening wm-first" });
 const openingLine = Decoration.line({ class: "wm-opening" });
 const lastLine = Decoration.line({ class: "wm-last" });
 
+/** Ornament lines change only with the text, so each version of a note is scanned once. */
+const ornamentCache = new WeakMap<Text, Ornaments>();
+
+function ornamentsOf(doc: Text): Ornaments {
+  let ornaments = ornamentCache.get(doc);
+  if (!ornaments) {
+    ornaments = ornamentLines(doc);
+    ornamentCache.set(doc, ornaments);
+  }
+  return ornaments;
+}
+
 function buildMarks(view: EditorView): DecorationSet {
   const options = view.state.field(writingModeField);
   if (!options) return Decoration.none;
@@ -125,10 +137,11 @@ function buildMarks(view: EditorView): DecorationSet {
     }
   }
 
-  const ornaments = ornamentLines(doc);
+  const ornaments = ornamentsOf(doc);
   if (ornaments.first !== null) ranges.push(firstLine.range(doc.line(ornaments.first).from));
   for (const n of ornaments.openings) ranges.push(openingLine.range(doc.line(n).from));
-  if (ornaments.last !== null) ranges.push(lastLine.range(doc.line(ornaments.last).from));
+  const tail = tailpieceLine(ornaments, doc.lineAt(view.state.selection.main.head).number);
+  if (tail !== null) ranges.push(lastLine.range(doc.line(tail).from));
 
   const lit = view.state.field(liftedField) ? null : litSpan(view, options.dimming);
   if (lit) {
@@ -288,11 +301,12 @@ class Typewriter implements PluginValue {
       const coords = view.coordsAtPos(view.state.selection.main.head);
       if (!coords) return;
       const height = view.scrollDOM.clientHeight;
-      let top = coords.top - view.scrollDOM.getBoundingClientRect().top;
+      const editorTop = view.scrollDOM.getBoundingClientRect().top;
+      let top = coords.top - editorTop;
       // The caret scrolled out of view when the page laid out again (a
       // setting switched, a resize): typing brings it back into the page,
       // not to the edge it went past.
-      if (top < 0 || coords.bottom - coords.top + top > height) {
+      if (top < 0 || coords.bottom - editorTop > height) {
         top = Math.min(Math.max(top, height * HELD_MIN), height * HELD_MAX);
       }
       const held = view.state.field(heldTopField);

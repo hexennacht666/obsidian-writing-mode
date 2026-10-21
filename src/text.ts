@@ -112,54 +112,94 @@ export interface Ornaments {
   first: number | null;
   /** First lines of prose after a scene break or heading: small capitals. */
   openings: number[];
-  /** Scene breaks (`***`, `---`, `___`); Obsidian draws them, the papers restyle them. */
-  breaks: number[];
   /** The story's last line of prose: the tailpiece under it. */
   last: number | null;
 }
 
 const HEADING = /^#{1,6}\s/;
+/** `***`, `---` or `___`; Obsidian draws these, and the papers restyle what it draws. */
 const SCENE_BREAK = /^ {0,3}([*_-])(?:[ \t]*\1){2,}[ \t]*$/;
-/** Lines that are not running prose: lists, quotes, tables, embeds, comments. */
-const NOT_PROSE = /^\s*(?:[-*+]\s|\d+[.)]\s|>|\||!\[\[|%%|```|~~~|\$\$)/;
+/** A line of `=` or `-` under a paragraph makes that paragraph a heading. */
+const UNDERLINE = /^ {0,3}(?:=+|-+)[ \t]*$/;
+/** Lines that are not running prose: lists, quotes, tables, embeds, tags, footnotes. */
+const NOT_PROSE = /^\s*(?:[-*+]\s|\d+[.)]\s|>|\||!\[\[|#[^\s#]|\[\^[^\]]+\]:)/;
+const FENCE = /^ {0,3}(?:```|~~~)/;
+const MATH = /^\s*\$\$/;
+
+function commentMarks(text: string): number {
+  return text.split("%%").length - 1;
+}
 
 /**
- * Prose lines are paragraphs; a heading or a scene break means the next
- * paragraph opens a new section.
+ * The line numbers the manuscript papers decorate. Prose is everything that
+ * is not front matter, a heading, a scene break, one of the NOT_PROSE kinds,
+ * or inside a code block, a math block or a `%%` note to yourself.
  */
 export function ornamentLines(doc: Doc): Ornaments {
   const frontmatter = frontmatterLines(doc);
-  const result: Ornaments = { first: null, openings: [], breaks: [], last: null };
+  const result: Ornaments = { first: null, openings: [], last: null };
   let opens = true;
   let inParagraph = false;
+  let paragraphStart = 0;
+  let lastBeforeParagraph: number | null = null;
+  let block: "fence" | "math" | "comment" | null = null;
   for (let n = frontmatter ? frontmatter.last + 1 : 1; n <= doc.lines; n += 1) {
     const text = doc.line(n).text;
+    if (block) {
+      if (block === "fence" && FENCE.test(text)) block = null;
+      else if (block === "math" && MATH.test(text)) block = null;
+      else if (block === "comment" && commentMarks(text) % 2 === 1) block = null;
+      continue;
+    }
+    if (FENCE.test(text) || MATH.test(text) || (text.trimStart().startsWith("%%") && commentMarks(text) % 2 === 1)) {
+      block = FENCE.test(text) ? "fence" : MATH.test(text) ? "math" : "comment";
+      inParagraph = false;
+      continue;
+    }
     if (blank(text)) {
       inParagraph = false;
       continue;
     }
-    if (SCENE_BREAK.test(text)) {
-      result.breaks.push(n);
+    if (inParagraph && UNDERLINE.test(text)) {
+      // The paragraph above was a heading after all.
+      if (result.first === paragraphStart) result.first = null;
+      else if (result.openings[result.openings.length - 1] === paragraphStart) result.openings.pop();
+      result.last = lastBeforeParagraph;
       opens = true;
       inParagraph = false;
       continue;
     }
-    if (HEADING.test(text)) {
+    if (SCENE_BREAK.test(text) || HEADING.test(text)) {
       opens = true;
       inParagraph = false;
       continue;
     }
-    if (NOT_PROSE.test(text)) {
+    if (NOT_PROSE.test(text) || text.trimStart().startsWith("%%")) {
       inParagraph = false;
       continue;
     }
-    if (!inParagraph && opens) {
-      if (result.first === null) result.first = n;
-      else result.openings.push(n);
-      opens = false;
+    if (!inParagraph) {
+      paragraphStart = n;
+      lastBeforeParagraph = result.last;
+      if (opens) {
+        if (result.first === null) result.first = n;
+        else result.openings.push(n);
+        opens = false;
+      }
     }
     inParagraph = true;
+    // A note to yourself opened mid-line runs on into the lines below.
+    if (commentMarks(text) % 2 === 1) block = "comment";
     result.last = n;
   }
   return result;
+}
+
+/**
+ * The tailpiece sits under the story's last line, but only while the cursor
+ * is above it: writing on at the end would otherwise move it, and the page
+ * with it, at every new line.
+ */
+export function tailpieceLine(ornaments: Ornaments, cursorLine: number): number | null {
+  return ornaments.last !== null && cursorLine < ornaments.last ? ornaments.last : null;
 }

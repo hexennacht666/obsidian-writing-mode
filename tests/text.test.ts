@@ -1,7 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { Text } from "@codemirror/state";
-import { frontmatterLines, ornamentLines, paragraphAround, sentenceAround, wordCount } from "../src/text";
+import { frontmatterLines, ornamentLines, paragraphAround, sentenceAround, tailpieceLine, wordCount } from "../src/text";
 
 const doc = (s: string | string[]) => Text.of(Array.isArray(s) ? s : s.split("\n"));
 
@@ -88,7 +88,7 @@ test("word count leaves out front matter, notes to yourself and bare punctuation
   assert.equal(wordCount("—"), 0);
 });
 
-test("ornaments: the first paragraph, openings after breaks and headings, breaks, the last line", () => {
+test("ornaments: the first paragraph, openings after breaks and headings, the last line", () => {
   const story = doc([
     "---",
     "title: A story",
@@ -116,10 +116,39 @@ test("ornaments: the first paragraph, openings after breaks and headings, breaks
     "Last paragraph.",
     "",
   ]);
-  assert.deepEqual(ornamentLines(story), { first: 7, openings: [14, 20, 24], breaks: [12, 22], last: 24 });
+  assert.deepEqual(ornamentLines(story), { first: 7, openings: [14, 20, 24], last: 24 });
 });
 
 test("ornaments: a story with no front matter or headings, and an empty note", () => {
-  assert.deepEqual(ornamentLines(doc(["Only line."])), { first: 1, openings: [], breaks: [], last: 1 });
-  assert.deepEqual(ornamentLines(doc(["---", "a: 1", "---"])), { first: null, openings: [], breaks: [], last: null });
+  assert.deepEqual(ornamentLines(doc(["Only line."])), { first: 1, openings: [], last: 1 });
+  assert.deepEqual(ornamentLines(doc(["---", "a: 1", "---"])), { first: null, openings: [], last: null });
+});
+
+test("ornaments: notes to yourself, code and math blocks are not prose, whole", () => {
+  assert.equal(ornamentLines(doc(["%%", "Outline: she leaves at dawn.", "%%", "", "The road was white."])).first, 5);
+  assert.equal(ornamentLines(doc(["```", "code", "```", "", "The road was white."])).first, 5);
+  assert.equal(ornamentLines(doc(["$$", "x = 1", "$$", "", "The road was white."])).first, 5);
+  assert.equal(ornamentLines(doc(["The road was white.", "", "%%", "todo: fix the ending", "%%"])).last, 1);
+  assert.equal(ornamentLines(doc(["The road %% a note %% was white.", "", "%% one line %%", "", "End."])).last, 5);
+});
+
+test("ornaments: tag lines and footnotes are not prose", () => {
+  assert.equal(ornamentLines(doc(["#draft #ch1", "", "The road was white."])).first, 3);
+  assert.equal(ornamentLines(doc(["The road was white.[^1]", "", "[^1]: A note."])).last, 1);
+});
+
+test("ornaments: a heading underlined with = or - opens the paragraph after it", () => {
+  assert.deepEqual(ornamentLines(doc(["Chapter One", "===", "", "The road was white.", "", "Part Two", "---", "", "Night fell."])), {
+    first: 4,
+    openings: [9],
+    last: 9,
+  });
+});
+
+test("the tailpiece shows only while the cursor is above the story's last line", () => {
+  const ornaments = { first: 1, openings: [], last: 5 };
+  assert.equal(tailpieceLine(ornaments, 3), 5);
+  assert.equal(tailpieceLine(ornaments, 5), null);
+  assert.equal(tailpieceLine(ornaments, 7), null);
+  assert.equal(tailpieceLine({ first: null, openings: [], last: null }, 1), null);
 });
