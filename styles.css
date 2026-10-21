@@ -457,17 +457,43 @@ body.is-mobile .wm-hint {
   100% { opacity: 0; }
 }
 
-/* Off by default; a static count for anyone who asks. */
+/* Off by default. Tucked into the lower right corner the way Obsidian's own
+   status bar is, in the paper's soft ink and the page's face; the two
+   screens square the corner off, as their windows were. */
 .wm-wordcount {
   position: absolute;
-  left: 0;
   right: 0;
-  bottom: 10px;
-  text-align: center;
-  font-size: var(--font-ui-smaller);
-  color: var(--text-faint);
+  bottom: 0;
+  padding: 3px 10px 4px;
+  border-top: 1px solid var(--wm-ink-soft);
+  border-left: 1px solid var(--wm-ink-soft);
+  border-top-left-radius: 6px;
+  background-color: var(--wm-paper);
+  color: var(--wm-ink-soft);
+  font-family: var(--font-text);
+  font-size: var(--font-ui-small);
+  line-height: 1.4;
   pointer-events: none;
   z-index: 5;
+}
+
+body.wm-on .wm-view.wm-font .wm-wordcount {
+  font-family: var(--wm-font);
+}
+
+body.wm-on.wm-paper-green .wm-view .wm-wordcount {
+  font-family: "IBM Plex Mono", Menlo, Monaco, "Courier New", monospace;
+  font-size: var(--font-ui-smaller);
+  text-shadow: 0 0 6px color-mix(in srgb, currentColor 35%, transparent);
+  border-top-left-radius: 0;
+}
+
+body.wm-on.wm-paper-mac .wm-view .wm-wordcount {
+  font-family: Monaco, Menlo, "Courier New", monospace;
+  font-size: var(--font-ui-smaller);
+  color: var(--wm-ink-soft);
+  border-color: var(--wm-ink);
+  border-top-left-radius: 0;
 }
 
 /* --- Above the phone's keyboard ------------------------------------------- */
