@@ -29,7 +29,7 @@ To give Writing Mode a hotkey, open **Settings → Hotkeys** and search for **Wr
 
 <img alt="The same story on each paper: warm cream, cool white and night blue above, night gray, green screen and Classic Mac below" src="https://raw.githubusercontent.com/hexennacht666/obsidian-writing-mode/HEAD/images/papers.png">
 
-Soft papers in a book typeface: warm cream and cool white for daytime, night blue and night gray for after dark. High-contrast retro screens in a monospaced typeface. Or your own theme's colors and font. The default, **Automatic**, switches between cream and night blue to match Obsidian's light or dark mode.
+Soft papers in a book typeface: warm cream and cool white for daytime, night blue and night gray for after dark. High-contrast retro screens in a monospaced typeface. Two illuminated manuscripts, just for fun. Or your own theme's colors and font. The default, **Automatic**, switches between cream and night blue to match Obsidian's light or dark mode.
 
 ## On mobile
 
