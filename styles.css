@@ -404,8 +404,96 @@ body.is-mobile.wm-on .wm-view.wm-sized .markdown-source-view {
    WM Initials is UnifrakturMaguntia cut to its capitals and renamed, as its
    license asks of a modified version. Copyright (c) 2010 j. 'mach' wust,
    with Reserved Font Name UnifrakturMaguntia; Copyright (c) 2009 Peter
-   Wiegel. Licensed under the SIL Open Font License, Version 1.1:
-   https://openfontlicense.org */
+   Wiegel. This Font Software is licensed under the SIL Open Font License,
+   Version 1.1, copied below.
+
+-----------------------------------------------------------
+SIL OPEN FONT LICENSE Version 1.1 - 26 February 2007
+-----------------------------------------------------------
+
+PREAMBLE
+The goals of the Open Font License (OFL) are to stimulate worldwide
+development of collaborative font projects, to support the font creation
+efforts of academic and linguistic communities, and to provide a free and
+open framework in which fonts may be shared and improved in partnership
+with others.
+
+The OFL allows the licensed fonts to be used, studied, modified and
+redistributed freely as long as they are not sold by themselves. The
+fonts, including any derivative works, can be bundled, embedded, 
+redistributed and/or sold with any software provided that any reserved
+names are not used by derivative works. The fonts and derivatives,
+however, cannot be released under any other type of license. The
+requirement for fonts to remain under this license does not apply
+to any document created using the fonts or their derivatives.
+
+DEFINITIONS
+"Font Software" refers to the set of files released by the Copyright
+Holder(s) under this license and clearly marked as such. This may
+include source files, build scripts and documentation.
+
+"Reserved Font Name" refers to any names specified as such after the
+copyright statement(s).
+
+"Original Version" refers to the collection of Font Software components as
+distributed by the Copyright Holder(s).
+
+"Modified Version" refers to any derivative made by adding to, deleting,
+or substituting -- in part or in whole -- any of the components of the
+Original Version, by changing formats or by porting the Font Software to a
+new environment.
+
+"Author" refers to any designer, engineer, programmer, technical
+writer or other person who contributed to the Font Software.
+
+PERMISSION & CONDITIONS
+Permission is hereby granted, free of charge, to any person obtaining
+a copy of the Font Software, to use, study, copy, merge, embed, modify,
+redistribute, and sell modified and unmodified copies of the Font
+Software, subject to the following conditions:
+
+1) Neither the Font Software nor any of its individual components,
+in Original or Modified Versions, may be sold by itself.
+
+2) Original or Modified Versions of the Font Software may be bundled,
+redistributed and/or sold with any software, provided that each copy
+contains the above copyright notice and this license. These can be
+included either as stand-alone text files, human-readable headers or
+in the appropriate machine-readable metadata fields within text or
+binary files as long as those fields can be easily viewed by the user.
+
+3) No Modified Version of the Font Software may use the Reserved Font
+Name(s) unless explicit written permission is granted by the corresponding
+Copyright Holder. This restriction only applies to the primary font name as
+presented to the users.
+
+4) The name(s) of the Copyright Holder(s) or the Author(s) of the Font
+Software shall not be used to promote, endorse or advertise any
+Modified Version, except to acknowledge the contribution(s) of the
+Copyright Holder(s) and the Author(s) or with their explicit written
+permission.
+
+5) The Font Software, modified or unmodified, in part or in whole,
+must be distributed entirely under this license, and must not be
+distributed under any other license. The requirement for fonts to
+remain under this license does not apply to any document created
+using the Font Software.
+
+TERMINATION
+This license becomes null and void if any of the above conditions are
+not met.
+
+DISCLAIMER
+THE FONT SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO ANY WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT
+OF COPYRIGHT, PATENT, TRADEMARK, OR OTHER RIGHT. IN NO EVENT SHALL THE
+COPYRIGHT HOLDER BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+INCLUDING ANY GENERAL, SPECIAL, INDIRECT, INCIDENTAL, OR CONSEQUENTIAL
+DAMAGES, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+FROM, OUT OF THE USE OR INABILITY TO USE THE FONT SOFTWARE OR FROM
+OTHER DEALINGS IN THE FONT SOFTWARE.
+*/
 @font-face {
   font-family: "WM Initials";
   src: url(data:font/woff2;base64,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) format("woff2");
@@ -448,8 +536,10 @@ body.wm-on:is(.wm-paper-illuminated, .wm-paper-black-book) .wm-view .cm-line.wm-
   letter-spacing: 0.04em;
 }
 
-/* A scene break (Obsidian's rule, drawn while the cursor is elsewhere) is
-   the quatrefoil on a hairline. */
+/* A scene break is the quatrefoil on a hairline. While the cursor is
+   elsewhere, Obsidian draws the rule as a line with the internal class
+   .cm-line.hr and its own widget inside; the widget is hidden and the
+   ornament drawn on the line. */
 body.wm-on:is(.wm-paper-illuminated, .wm-paper-black-book) .wm-view .cm-line.hr {
   height: 79px;
   background:
@@ -464,10 +554,10 @@ body.wm-on:is(.wm-paper-illuminated, .wm-paper-black-book) .wm-view .cm-line.hr 
 body.wm-on:is(.wm-paper-illuminated, .wm-paper-black-book) .wm-view .cm-line.wm-last::after {
   content: "";
   display: block;
-  max-width: 100%;
   height: 22px;
   margin-top: 48px;
-  background: var(--wm-vine) center / 420px 22px no-repeat;
+  /* Its full 420px where there is room, scaled down on a narrow phone. */
+  background: var(--wm-vine) center / contain no-repeat;
 }
 
 /* --- Dimming --------------------------------------------------------------- */
@@ -527,7 +617,8 @@ body.is-mobile .wm-hint {
   top: calc(env(safe-area-inset-top, 0px) + 14px);
 }
 
-/* With the word count beside the book, the hint takes the line below. */
+/* With the word count beside the book, the hint takes the line below
+   (the book's 44px from 2px down, plus a little). */
 body.is-mobile .wm-view.wm-counted .wm-hint {
   top: calc(env(safe-area-inset-top, 0px) + 52px);
 }
@@ -573,16 +664,18 @@ body.wm-on.wm-paper-green .wm-view .wm-wordcount {
 body.wm-on.wm-paper-mac .wm-view .wm-wordcount {
   font-family: Monaco, Menlo, "Courier New", monospace;
   font-size: var(--font-ui-smaller);
-  color: var(--wm-ink-soft);
   border-color: var(--wm-ink);
   border-top-left-radius: 0;
 }
 
 /* On the phone the foot of the screen belongs to the keyboard and Obsidian's
    toolbar, so the count sits at the top instead, level with the book and
-   just left of it, the same with the keyboard up or down. */
+   just left of it, the same with the keyboard up or down. The numbers follow
+   .wm-close (2px from the top, 8px from the right, 44px square): 26px tall
+   and 11px down centers it on the book, and 58px from the right leaves a
+   6px gap. */
 body.is-mobile.wm-on .wm-view .wm-wordcount {
-  display: inline-flex;
+  display: flex;
   align-items: center;
   box-sizing: border-box;
   top: calc(env(safe-area-inset-top, 0px) + 11px);
