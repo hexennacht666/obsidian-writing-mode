@@ -105,3 +105,61 @@ export function wordCount(text: string): number {
   }
   return count;
 }
+
+/** Where the manuscript papers put their ornaments, by line number. */
+export interface Ornaments {
+  /** The story's first line of prose: the initial and small capitals. */
+  first: number | null;
+  /** First lines of prose after a scene break or heading: small capitals. */
+  openings: number[];
+  /** Scene breaks (`***`, `---`, `___`); Obsidian draws them, the papers restyle them. */
+  breaks: number[];
+  /** The story's last line of prose: the tailpiece under it. */
+  last: number | null;
+}
+
+const HEADING = /^#{1,6}\s/;
+const SCENE_BREAK = /^ {0,3}([*_-])(?:[ \t]*\1){2,}[ \t]*$/;
+/** Lines that are not running prose: lists, quotes, tables, embeds, comments. */
+const NOT_PROSE = /^\s*(?:[-*+]\s|\d+[.)]\s|>|\||!\[\[|%%|```|~~~|\$\$)/;
+
+/**
+ * Prose lines are paragraphs; a heading or a scene break means the next
+ * paragraph opens a new section.
+ */
+export function ornamentLines(doc: Doc): Ornaments {
+  const frontmatter = frontmatterLines(doc);
+  const result: Ornaments = { first: null, openings: [], breaks: [], last: null };
+  let opens = true;
+  let inParagraph = false;
+  for (let n = frontmatter ? frontmatter.last + 1 : 1; n <= doc.lines; n += 1) {
+    const text = doc.line(n).text;
+    if (blank(text)) {
+      inParagraph = false;
+      continue;
+    }
+    if (SCENE_BREAK.test(text)) {
+      result.breaks.push(n);
+      opens = true;
+      inParagraph = false;
+      continue;
+    }
+    if (HEADING.test(text)) {
+      opens = true;
+      inParagraph = false;
+      continue;
+    }
+    if (NOT_PROSE.test(text)) {
+      inParagraph = false;
+      continue;
+    }
+    if (!inParagraph && opens) {
+      if (result.first === null) result.first = n;
+      else result.openings.push(n);
+      opens = false;
+    }
+    inParagraph = true;
+    result.last = n;
+  }
+  return result;
+}

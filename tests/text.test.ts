@@ -1,7 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { Text } from "@codemirror/state";
-import { frontmatterLines, paragraphAround, sentenceAround, wordCount } from "../src/text";
+import { frontmatterLines, ornamentLines, paragraphAround, sentenceAround, wordCount } from "../src/text";
 
 const doc = (s: string | string[]) => Text.of(Array.isArray(s) ? s : s.split("\n"));
 
@@ -86,4 +86,40 @@ test("word count leaves out front matter, notes to yourself and bare punctuation
   assert.equal(wordCount("A multi\nline %%note\nacross lines%% story"), 4);
   assert.equal(wordCount(""), 0);
   assert.equal(wordCount("—"), 0);
+});
+
+test("ornaments: the first paragraph, openings after breaks and headings, breaks, the last line", () => {
+  const story = doc([
+    "---",
+    "title: A story",
+    "---",
+    "",
+    "## One",
+    "",
+    "First paragraph.",
+    "Its second line.",
+    "",
+    "Second paragraph.",
+    "",
+    "***",
+    "",
+    "After the break.",
+    "",
+    "## Two",
+    "",
+    "- a list item",
+    "",
+    "After the heading, past the list.",
+    "",
+    "* * *",
+    "",
+    "Last paragraph.",
+    "",
+  ]);
+  assert.deepEqual(ornamentLines(story), { first: 7, openings: [14, 20, 24], breaks: [12, 22], last: 24 });
+});
+
+test("ornaments: a story with no front matter or headings, and an empty note", () => {
+  assert.deepEqual(ornamentLines(doc(["Only line."])), { first: 1, openings: [], breaks: [], last: 1 });
+  assert.deepEqual(ornamentLines(doc(["---", "a: 1", "---"])), { first: null, openings: [], breaks: [], last: null });
 });
