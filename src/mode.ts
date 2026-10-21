@@ -29,8 +29,6 @@ interface Session {
   fullScreen: FullScreenRoute;
   scope: Scope;
   count: HTMLElement | null;
-  /** On the phone, the same count in the strip above the keyboard. */
-  stripCount: HTMLElement | null;
   countTimer: number | null;
   cleanup: (() => void)[];
 }
@@ -263,7 +261,6 @@ export class WritingMode {
       fullScreen: null,
       scope,
       count: null,
-      stripCount: null,
       countTimer: null,
       cleanup,
     };
@@ -353,12 +350,11 @@ export class WritingMode {
     session.unfollow?.();
     if (session.countTimer !== null) window.clearTimeout(session.countTimer);
     session.count?.remove();
-    session.stripCount?.remove();
     for (const undo of session.cleanup) undo();
 
     body.classList.remove("wm-on", "wm-typewriter", "wm-font");
     body.setCssProps({ "--wm-font": "" });
-    session.view.containerEl.classList.remove("wm-view", "wm-sized", "wm-font");
+    session.view.containerEl.classList.remove("wm-view", "wm-sized", "wm-font", "wm-counted");
     session.view.containerEl.setCssProps({ "--wm-font-size": "", "--wm-font": "" });
     session.view.containerEl.closest(".workspace-leaf")?.classList.remove("wm-leaf");
 
@@ -559,13 +555,12 @@ export class WritingMode {
     if (!session) return;
     if (this.plugin.settings.wordCount && !session.count) {
       session.count = session.view.containerEl.createDiv({ cls: "wm-wordcount" });
-      if (Platform.isMobile) session.stripCount = createDiv({ cls: "wm-wordcount-strip" });
+      session.view.containerEl.classList.add("wm-counted");
       this.writeCount();
     } else if (!this.plugin.settings.wordCount && session.count) {
       session.count.remove();
-      session.stripCount?.remove();
       session.count = null;
-      session.stripCount = null;
+      session.view.containerEl.classList.remove("wm-counted");
     }
   }
 
@@ -573,21 +568,7 @@ export class WritingMode {
     const session = this.session;
     if (!session?.count) return;
     const words = wordCount(session.view.editor.getValue());
-    const text = `${words.toLocaleString()} ${words === 1 ? "word" : "words"}`;
-    session.count.setText(text);
-    if (session.stripCount) {
-      session.stripCount.setText(text);
-      this.placeStripCount(session.stripCount);
-    }
-  }
-
-  /**
-   * The strip count sits just before the keyboard button. Obsidian can build
-   * its toolbar again, so it is put back each time the count is written.
-   */
-  private placeStripCount(el: HTMLElement): void {
-    const button = this.doc.querySelector(".mobile-toolbar .mobile-toolbar-floating-options");
-    if (button && el.nextElementSibling !== button) button.before(el);
+    session.count.setText(`${words.toLocaleString()} ${words === 1 ? "word" : "words"}`);
   }
 
   /**
