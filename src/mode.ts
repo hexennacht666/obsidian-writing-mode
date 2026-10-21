@@ -328,6 +328,8 @@ export class WritingMode {
       "wm-paper-grey",
       "wm-paper-green",
       "wm-paper-mac",
+      "wm-paper-illuminated",
+      "wm-paper-black-book",
     );
   }
 

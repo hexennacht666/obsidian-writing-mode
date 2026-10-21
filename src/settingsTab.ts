@@ -76,6 +76,8 @@ export class WritingModeSettingTab extends PluginSettingTab {
             grey: "Night gray",
             green: "Green screen",
             mac: "Classic Mac",
+            illuminated: "Illuminated",
+            "black-book": "Illuminated Black Book",
             theme: "Your theme's colors",
           },
         },

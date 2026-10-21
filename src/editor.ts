@@ -13,7 +13,7 @@ import {
   type ViewUpdate,
 } from "@codemirror/view";
 import type { Dimming } from "./settings";
-import { frontmatterLines, paragraphAround, sentenceAround, type Span } from "./text";
+import { frontmatterLines, ornamentLines, paragraphAround, sentenceAround, type Span } from "./text";
 
 export interface WritingModeOptions {
   dimming: Dimming;
@@ -106,6 +106,10 @@ function litSpan(view: EditorView, dimming: Dimming): Span | null {
 
 const dimMark = Decoration.mark({ class: "wm-dim" });
 const frontmatterLine = Decoration.line({ class: "wm-frontmatter" });
+// Marked on every paper; only the manuscript papers draw them (styles.css).
+const firstLine = Decoration.line({ class: "wm-opening wm-first" });
+const openingLine = Decoration.line({ class: "wm-opening" });
+const lastLine = Decoration.line({ class: "wm-last" });
 
 function buildMarks(view: EditorView): DecorationSet {
   const options = view.state.field(writingModeField);
@@ -120,6 +124,11 @@ function buildMarks(view: EditorView): DecorationSet {
       ranges.push(frontmatterLine.range(doc.line(n).from));
     }
   }
+
+  const ornaments = ornamentLines(doc);
+  if (ornaments.first !== null) ranges.push(firstLine.range(doc.line(ornaments.first).from));
+  for (const n of ornaments.openings) ranges.push(openingLine.range(doc.line(n).from));
+  if (ornaments.last !== null) ranges.push(lastLine.range(doc.line(ornaments.last).from));
 
   const lit = view.state.field(liftedField) ? null : litSpan(view, options.dimming);
   if (lit) {

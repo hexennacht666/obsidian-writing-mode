@@ -5,11 +5,12 @@ export type Dimming = "paragraph" | "sentence" | "off";
 /**
  * The paper: two light papers, two dark ones, two screens from the first
  * decades of word processors (a green phosphor terminal and the 1984 Mac's
- * black on white, both in a monospace face), the theme's own colors, or
+ * black on white, both in a monospace face), two illuminated manuscripts
+ * (parchment, and a black book of hours), the theme's own colors, or
  * "auto", which is cream with a light theme and night blue with a dark one.
  */
-export type Paper = "auto" | "cream" | "white" | "blue" | "grey" | "green" | "mac" | "theme";
-export const PAPERS: Paper[] = ["auto", "cream", "white", "blue", "grey", "green", "mac", "theme"];
+export type Paper = "auto" | "cream" | "white" | "blue" | "grey" | "green" | "mac" | "illuminated" | "black-book" | "theme";
+export const PAPERS: Paper[] = ["auto", "cream", "white", "blue", "grey", "green", "mac", "illuminated", "black-book", "theme"];
 
 /** The default typeface, a word processor's serif. */
 export const DEFAULT_FONT = "Palatino";
