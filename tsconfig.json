@@ -10,8 +10,16 @@
     "esModuleInterop": true,
     "isolatedModules": true,
     "strictNullChecks": true,
-    "lib": ["DOM", "ES2018"]
+    "lib": [
+      "DOM",
+      "ES2018"
+    ],
+    "types": []
   },
-  "include": ["**/*.ts"],
-  "exclude": ["node_modules"]
+  "include": [
+    "src/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }

@@ -125,6 +125,7 @@ const UNDERLINE = /^ {0,3}(?:=+|-+)[ \t]*$/;
 const NOT_PROSE = /^\s*(?:[-*+]\s|\d+[.)]\s|>|\||!\[\[|#[^\s#]|\[\^[^\]]+\]:)/;
 const FENCE = /^ {0,3}(?:```|~~~)/;
 const MATH = /^\s*\$\$/;
+const COMMENT_START = /^\s*%%/;
 
 function commentMarks(text: string): number {
   return text.split("%%").length - 1;
@@ -151,7 +152,7 @@ export function ornamentLines(doc: Doc): Ornaments {
       else if (block === "comment" && commentMarks(text) % 2 === 1) block = null;
       continue;
     }
-    if (FENCE.test(text) || MATH.test(text) || (text.trimStart().startsWith("%%") && commentMarks(text) % 2 === 1)) {
+    if (FENCE.test(text) || MATH.test(text) || (COMMENT_START.test(text) && commentMarks(text) % 2 === 1)) {
       block = FENCE.test(text) ? "fence" : MATH.test(text) ? "math" : "comment";
       inParagraph = false;
       continue;
@@ -174,7 +175,7 @@ export function ornamentLines(doc: Doc): Ornaments {
       inParagraph = false;
       continue;
     }
-    if (NOT_PROSE.test(text) || text.trimStart().startsWith("%%")) {
+    if (NOT_PROSE.test(text) || COMMENT_START.test(text)) {
       inParagraph = false;
       continue;
     }
