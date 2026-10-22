@@ -89,7 +89,7 @@ export class WritingModeSettingTab extends PluginSettingTab {
       },
       {
         name: "Word count",
-        desc: "A small count at the foot of the page, of your prose only.",
+        desc: "A prose-only word count in the corner.",
         control: { type: "toggle", key: "wordCount" },
       },
       {

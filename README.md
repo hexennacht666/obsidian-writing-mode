@@ -56,7 +56,7 @@ All in **Settings → Writing Mode**.
 - **Text size.** The same size the shortcuts and pinch change.
 - **Paper.** Choose a paper, or your theme's colors. Automatic by default.
 - **Typeface.** Palatino by default. Enter any font on your device, or leave it blank to use your theme's font.
-- **Word count.** A small count at the foot of the page, of your prose only. Off by default.
+- **Word count.** A prose-only word count in the corner. Off by default.
 - **Follow the system appearance.** Automatic follows your device's light or dark mode, even if your vault is set to one theme. Off by default.
 
 ## Compatibility

@@ -28,7 +28,7 @@ export interface WritingModeSettings {
   typewriter: boolean;
   /** What steps back around the cursor. */
   dimming: Dimming;
-  /** A small static count at the foot of the page. */
+  /** A small count of the prose while the mode is on. */
   wordCount: boolean;
   /** Go light or dark with the device even in a vault pinned to one theme. */
   followSystemAppearance: boolean;
